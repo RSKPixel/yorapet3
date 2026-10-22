@@ -27,7 +27,8 @@ export ANDROID_HOME="$SDK_DIR"
 export JAVA_HOME="$(dirname "$(dirname "$(readlink -f "$(command -v javac)")")")"
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
 
-yes | sdkmanager --licenses >/dev/null
+# `yes` dies of SIGPIPE when sdkmanager exits, which pipefail would treat as failure.
+yes | sdkmanager --licenses >/dev/null || true
 sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 
 # Kept in its own file: Ubuntu's .bashrc exits early for non-interactive shells.
