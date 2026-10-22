@@ -1,31 +1,25 @@
 # Deploying the Yorapet API (production only)
 
-Runs three containers: `api` (FastAPI on port 8009, localhost only, built from `../backend`),
-`nginx` (public 80/443, reverse proxy to the API) and `certbot` (renews the HTTPS certificate).
+Docker runs only the API (port 8009, localhost only, built from `../backend`).
+The server's own nginx is the public entry and handles HTTPS via certbot.
 
 ## First time on the server
 
-1. Point a DNS **A record** for `yorapetapi.yoratech.com` to the server's public IP,
-   and open ports **80** and **443** on the firewall/router.
+1. Point a DNS **A record** for `yorapetapi.yoratech.com` to the server.
 2. Copy the `backend` and `docker` folders to the server (side by side), then in `docker/`:
    ```bash
-   cp .env.example .env    # fill in DB_*, JWT_SECRET, DOMAIN, CERTBOT_EMAIL
+   cp .env.example .env          # fill in DB_*, JWT_SECRET, API_PORT, DOMAIN
    docker compose up -d --build
+   curl http://127.0.0.1:8009/health
    ```
-   The API now answers on `http://yorapetapi.yoratech.com/health`.
-3. Get the HTTPS certificate (switches nginx to HTTPS and redirects HTTP):
+3. Add the nginx site and HTTPS:
    ```bash
-   ./init-cert.sh
+   sudo ./setup-nginx.sh
+   sudo certbot --nginx -d yorapetapi.yoratech.com
    ```
 4. Create app users:
    ```bash
    docker compose exec api python create_user.py admin "Admin"
    ```
 
-Certificates renew automatically. Logs: `docker compose logs -f api nginx`.
-
-## Updating
-
-```bash
-docker compose up -d --build api
-```
+Logs: `docker compose logs -f api`. Update after code changes: `docker compose up -d --build`.
