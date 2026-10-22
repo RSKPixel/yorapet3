@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 
-from . import auth, reports
+from . import auth, production, reports
 from .db import init_db
 
 app = FastAPI(title="Yorapet API")
 app.include_router(auth.router)
+app.include_router(production.router)
 app.include_router(reports.router)
 
 

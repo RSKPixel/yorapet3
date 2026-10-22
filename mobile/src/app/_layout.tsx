@@ -16,6 +16,7 @@ function RootStack() {
       <Stack.Protected guard={!!user}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="voucher/[kind]/[no]" options={{ title: 'Bill' }} />
+        <Stack.Screen name="production/[id]" options={{ title: 'Production' }} />
       </Stack.Protected>
       <Stack.Protected guard={!user}>
         <Stack.Screen name="login" options={{ headerShown: false }} />

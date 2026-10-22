@@ -28,7 +28,10 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (res.status === 401 && token) onUnauthorized();
   if (!res.ok) {
     const body = await res.json().catch(() => null);
-    throw new Error(body?.detail ?? `Request failed (${res.status})`);
+    const detail = body?.detail;
+    // FastAPI validation errors arrive as a list of { msg }.
+    const msg = Array.isArray(detail) ? detail.map((d) => String(d.msg).replace(/^Value error, /, '')).join('\n') : detail;
+    throw new Error(msg ?? `Request failed (${res.status})`);
   }
   return res.json();
 }
@@ -82,3 +85,47 @@ export type Stock = {
   groups: { name: string; value: number }[];
   items: StockItem[];
 };
+
+export type ProductionInput = {
+  prod_date: string;
+  output_item: string;
+  output_qty: number;
+  preform_item: string | null;
+  preform_qty: number;
+  cap_item: string | null;
+  cap_qty: number;
+  wastage_qty: number;
+  eb_start: number;
+  eb_end: number;
+  eb_rate: number;
+  labour_cost: number;
+  notes: string | null;
+};
+
+export type ProductionEntry = ProductionInput & {
+  id: number;
+  preform_rate: number | null;
+  cap_rate: number | null;
+  material_cost: number;
+  eb_units: number;
+  eb_cost: number;
+  total_cost: number;
+  cost_per_unit: number | null;
+};
+
+export type ProductionSummary = {
+  totals: {
+    entries: number;
+    output_qty: number;
+    wastage_qty: number;
+    eb_units: number;
+    eb_cost: number;
+    material_cost: number;
+    labour_cost: number;
+    total_cost: number;
+  };
+  by_item: { name: string; qty: number; cost: number }[];
+  materials: { name: string; qty: number }[];
+};
+
+export type InventoryItem = { name: string; group: string; rate: number | null };

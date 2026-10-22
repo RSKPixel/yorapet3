@@ -11,6 +11,7 @@ export default function TabLayout() {
     <Tabs screenOptions={{ tabBarActiveTintColor: colors.primary }}>
       <Tabs.Screen name="index" options={{ title: 'Sales', tabBarIcon: icon('₹') }} />
       <Tabs.Screen name="purchases" options={{ title: 'Purchases', tabBarIcon: icon('⇩') }} />
+      <Tabs.Screen name="production" options={{ title: 'Production', tabBarIcon: icon('⚙') }} />
       <Tabs.Screen name="stock" options={{ title: 'Stock', tabBarIcon: icon('▦') }} />
       <Tabs.Screen name="account" options={{ title: 'Account', tabBarIcon: icon('☺') }} />
     </Tabs>

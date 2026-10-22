@@ -10,7 +10,7 @@ const PAGE = 30;
 
 export default function ReportScreen({ kind }: { kind: Kind }) {
   const router = useRouter();
-  const allRanges = useMemo(ranges, []);
+  const allRanges = useMemo(() => ranges(), []);
   const [rangeKey, setRangeKey] = useState('month');
   const [search, setSearch] = useState('');
   const range = allRanges.find((r) => r.key === rangeKey)!;
