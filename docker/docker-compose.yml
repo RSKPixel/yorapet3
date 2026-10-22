@@ -1,6 +1,6 @@
 services:
   api:
-    build: .
+    build: ../backend
     restart: unless-stopped
     env_file: .env
     environment:
@@ -27,9 +27,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./deploy/nginx/http.conf.template:/etc/nginx/templates/default.conf.template:ro
-      - ./deploy/nginx/https.conf.template:/etc/nginx/https.conf.template:ro
-      - ./deploy/nginx/40-enable-https.sh:/docker-entrypoint.d/40-enable-https.sh:ro
+      - ./nginx/http.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./nginx/https.conf.template:/etc/nginx/https.conf.template:ro
+      - ./nginx/40-enable-https.sh:/docker-entrypoint.d/40-enable-https.sh:ro
       - certbot-www:/var/www/certbot:ro
       - certbot-certs:/etc/letsencrypt:ro
     # Reload every 12h so renewed certificates are picked up.
