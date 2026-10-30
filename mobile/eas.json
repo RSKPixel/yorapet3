@@ -7,8 +7,15 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://yorapetapi.yoratech.com"
       }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://yorapetapi.yoratech.com"
+      }
+    }
   }
 }
