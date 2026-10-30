@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { FlatList, Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, Modal, Pressable, Text, TextInput, View } from 'react-native';
 import { api, InventoryItem } from '../lib/api';
 import { qty } from '../lib/format';
-import { colors, Row } from './ui';
+import { makeStyles, Row, useColors } from './ui';
 
 export function useInventory() {
   return useQuery({
@@ -29,6 +29,8 @@ export default function ItemPicker({
   exclude?: string[];
   optional?: boolean;
 }) {
+  const colors = useColors();
+  const styles = useStyles();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const { data } = useInventory();
@@ -88,7 +90,7 @@ export default function ItemPicker({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   label: { color: colors.muted, fontSize: 12, marginBottom: 4, marginTop: 10 },
   field: {
     backgroundColor: colors.card,
@@ -100,4 +102,4 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.text,
   },
-});
+}));

@@ -1,14 +1,16 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, RefreshControl, Text, TextInput, View } from 'react-native';
 import { api, Kind, qs, Summary, VoucherRow } from '../lib/api';
 import { money, qty, ranges, showDate } from '../lib/format';
-import { Card, Chips, colors, ErrorText, Loading, Row, SectionTitle, Stat } from './ui';
+import { Card, Chips, ErrorText, Loading, makeStyles, Row, SectionTitle, Stat, useColors } from './ui';
 
 const PAGE = 30;
 
 export default function ReportScreen({ kind }: { kind: Kind }) {
+  const colors = useColors();
+  const styles = useStyles();
   const router = useRouter();
   const allRanges = useMemo(() => ranges(), []);
   const [rangeKey, setRangeKey] = useState('month');
@@ -112,7 +114,7 @@ export default function ReportScreen({ kind }: { kind: Kind }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   search: {
     backgroundColor: colors.card,
     borderWidth: 1,
@@ -124,4 +126,4 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   empty: { color: colors.muted, textAlign: 'center', marginTop: 24 },
-});
+}));

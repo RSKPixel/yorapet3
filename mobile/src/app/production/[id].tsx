@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import ItemPicker, { useInventory } from '../../components/ItemPicker';
-import { Card, colors, ErrorText, Loading, Row, SectionTitle } from '../../components/ui';
+import { Card, ErrorText, Loading, makeStyles, Row, SectionTitle, useColors } from '../../components/ui';
 import { api, ProductionEntry, ProductionInput } from '../../lib/api';
 import { isoDate, money, qty } from '../../lib/format';
 
@@ -65,6 +65,8 @@ export default function ProductionScreen() {
 }
 
 function ProductionForm({ id, initial, saved }: { id: string; initial: Form; saved?: ProductionEntry }) {
+  const colors = useColors();
+  const styles = useStyles();
   const inventory = useInventory();
   const isNew = id === 'new';
   const router = useRouter();
@@ -232,7 +234,7 @@ function ProductionForm({ id, initial, saved }: { id: string; initial: Form; sav
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   pair: { flexDirection: 'row', gap: 10 },
   label: { color: colors.muted, fontSize: 12, marginBottom: 4, marginTop: 10 },
   input: {
@@ -257,4 +259,4 @@ const styles = StyleSheet.create({
     borderColor: colors.danger,
   },
   buttonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-});
+}));

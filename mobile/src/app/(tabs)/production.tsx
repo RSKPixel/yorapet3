@@ -1,14 +1,16 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { FlatList, Pressable, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
-import { Card, Chips, colors, ErrorText, Loading, Row, SectionTitle, Stat } from '../../components/ui';
+import { FlatList, Pressable, RefreshControl, Text, TextInput, View } from 'react-native';
+import { Card, Chips, ErrorText, Loading, makeStyles, Row, SectionTitle, Stat, useColors } from '../../components/ui';
 import { api, ProductionEntry, ProductionSummary, qs } from '../../lib/api';
 import { money, qty, ranges, showDate } from '../../lib/format';
 
 const PAGE = 30;
 
 export default function Production() {
+  const colors = useColors();
+  const styles = useStyles();
   const router = useRouter();
   const allRanges = useMemo(() => ranges(), []);
   const [rangeKey, setRangeKey] = useState('month');
@@ -131,7 +133,7 @@ export default function Production() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   add: { backgroundColor: colors.primary, borderRadius: 10, paddingVertical: 12, alignItems: 'center' },
   addText: { color: '#fff', fontSize: 15, fontWeight: '600' },
   search: {
@@ -145,4 +147,4 @@ const styles = StyleSheet.create({
     color: colors.text,
   },
   empty: { color: colors.muted, textAlign: 'center', marginTop: 24 },
-});
+}));

@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { colors } from '../components/ui';
+import { ActivityIndicator, KeyboardAvoidingView, Pressable, Text, TextInput, View } from 'react-native';
+import { makeStyles, useColors } from '../components/ui';
 import { useAuth } from '../lib/auth';
 
 export default function Login() {
+  const colors = useColors();
+  const styles = useStyles();
   const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -55,7 +57,7 @@ export default function Login() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((colors) => ({
   wrap: { flex: 1, justifyContent: 'center', backgroundColor: colors.bg, padding: 24 },
   box: { gap: 12 },
   title: { fontSize: 32, fontWeight: '800', color: colors.primary },
@@ -72,4 +74,4 @@ const styles = StyleSheet.create({
   error: { color: colors.danger },
   button: { backgroundColor: colors.primary, borderRadius: 10, padding: 15, alignItems: 'center', marginTop: 8 },
   buttonText: { color: '#fff', fontSize: 16, fontWeight: '700' },
-});
+}));

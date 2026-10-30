@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
-import { Card, colors, ErrorText, Loading, Row, SectionTitle } from '../../../components/ui';
+import { Card, ErrorText, Loading, Row, SectionTitle, useColors } from '../../../components/ui';
 import { api, VoucherDetail } from '../../../lib/api';
 import { money, qty, showDate } from '../../../lib/format';
 
 export default function Voucher() {
+  const colors = useColors();
   const { kind, no } = useLocalSearchParams<{ kind: string; no: string }>();
   const { data, error, isLoading } = useQuery({
     queryKey: [kind, 'voucher', no],

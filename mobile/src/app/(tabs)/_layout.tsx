@@ -1,12 +1,13 @@
 import { Tabs } from 'expo-router';
 import { ColorValue, Text } from 'react-native';
-import { colors } from '../../components/ui';
+import { useColors } from '../../components/ui';
 
 const icon = (glyph: string) => ({ color }: { color: ColorValue }) => (
   <Text style={{ color, fontSize: 20 }}>{glyph}</Text>
 );
 
 export default function TabLayout() {
+  const colors = useColors();
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: colors.primary }}>
       <Tabs.Screen name="index" options={{ title: 'Sales', tabBarIcon: icon('₹') }} />

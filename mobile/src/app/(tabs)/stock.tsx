@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { FlatList, RefreshControl, Text, TextInput, View } from 'react-native';
-import { Chips, colors, ErrorText, Loading, Row, Stat } from '../../components/ui';
+import { Chips, ErrorText, Loading, Row, Stat, useColors } from '../../components/ui';
 import { api, Stock as StockData } from '../../lib/api';
 import { money, qty, showDate } from '../../lib/format';
 
 export default function Stock() {
+  const colors = useColors();
   const [group, setGroup] = useState('all');
   const [search, setSearch] = useState('');
   const { data, error, isLoading, isRefetching, refetch } = useQuery({

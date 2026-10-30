@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native';
 
-export const colors = {
+const light = {
   bg: '#F4F6F8',
   card: '#FFFFFF',
   text: '#1B2430',
@@ -12,11 +12,48 @@ export const colors = {
   danger: '#C0392B',
 };
 
+export type Colors = typeof light;
+
+const dark: Colors = {
+  bg: '#0F1418',
+  card: '#1A2128',
+  text: '#E6EAEE',
+  muted: '#8A96A3',
+  border: '#2A333C',
+  primary: '#25875F',
+  primarySoft: '#173A2E',
+  danger: '#E5675A',
+};
+
+// Follows the phone's light/dark setting.
+export function useColors(): Colors {
+  return useColorScheme() === 'dark' ? dark : light;
+}
+
+type Styles = Parameters<typeof StyleSheet.create>[0];
+
+// Builds a stylesheet once per theme and returns a hook that picks the current one.
+// The `& Styles` mirrors StyleSheet.create so values like 'row' keep their literal types.
+export function makeStyles<S extends Styles>(build: (c: Colors) => S & Styles) {
+  const cache = new Map<Colors, Readonly<S>>();
+  return () => {
+    const c = useColors();
+    let styles = cache.get(c);
+    if (!styles) {
+      styles = StyleSheet.create(build(c));
+      cache.set(c, styles);
+    }
+    return styles;
+  };
+}
+
 export function Card({ children, style }: { children: ReactNode; style?: object }) {
+  const s = useS();
   return <View style={[s.card, style]}>{children}</View>;
 }
 
 export function Stat({ label, value }: { label: string; value: string }) {
+  const s = useS();
   return (
     <Card style={{ flex: 1 }}>
       <Text style={s.statLabel}>{label}</Text>
@@ -36,6 +73,7 @@ export function Chips<T extends string>({
   value: T;
   onChange: (k: T) => void;
 }) {
+  const s = useS();
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
       {options.map((o) => {
@@ -51,6 +89,7 @@ export function Chips<T extends string>({
 }
 
 export function Row({ left, sub, right, onPress }: { left: string; sub?: string; right: string; onPress?: () => void }) {
+  const s = useS();
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [s.row, pressed && onPress && { opacity: 0.6 }]}>
       <View style={{ flex: 1, paddingRight: 12 }}>
@@ -65,18 +104,21 @@ export function Row({ left, sub, right, onPress }: { left: string; sub?: string;
 }
 
 export function SectionTitle({ children }: { children: ReactNode }) {
+  const s = useS();
   return <Text style={s.section}>{children}</Text>;
 }
 
 export function Loading() {
+  const colors = useColors();
   return <ActivityIndicator style={{ marginTop: 40 }} color={colors.primary} />;
 }
 
 export function ErrorText({ error }: { error: unknown }) {
+  const s = useS();
   return <Text style={s.error}>{error instanceof Error ? error.message : 'Something went wrong'}</Text>;
 }
 
-const s = StyleSheet.create({
+const useS = makeStyles((colors) => ({
   card: { backgroundColor: colors.card, borderRadius: 12, padding: 14, borderWidth: 1, borderColor: colors.border },
   statLabel: { color: colors.muted, fontSize: 12, marginBottom: 4 },
   statValue: { color: colors.text, fontSize: 18, fontWeight: '700' },
@@ -90,4 +132,4 @@ const s = StyleSheet.create({
   rowRight: { color: colors.text, fontSize: 15, fontWeight: '600' },
   section: { color: colors.muted, fontSize: 13, fontWeight: '600', marginTop: 18, marginBottom: 6, textTransform: 'uppercase' },
   error: { color: colors.danger, textAlign: 'center', margin: 24 },
-});
+}));

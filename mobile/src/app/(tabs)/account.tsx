@@ -1,8 +1,9 @@
 import { Pressable, Text, View } from 'react-native';
-import { Card, colors } from '../../components/ui';
+import { Card, useColors } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
 
 export default function Account() {
+  const colors = useColors();
   const { user, logout } = useAuth();
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg, padding: 16, gap: 16 }}>

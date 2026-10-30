@@ -1,7 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Stack } from 'expo-router';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { Loading } from '../components/ui';
+import { useColorScheme } from 'react-native';
+import { Loading, useColors } from '../components/ui';
 import { AuthProvider, useAuth } from '../lib/auth';
 
 const queryClient = new QueryClient({
@@ -26,11 +27,28 @@ function RootStack() {
 }
 
 export default function RootLayout() {
+  const scheme = useColorScheme();
+  const colors = useColors();
+  const base = scheme === 'dark' ? DarkTheme : DefaultTheme;
+  // Headers, tab bar and screen backgrounds follow the app palette.
+  const theme = {
+    ...base,
+    colors: {
+      ...base.colors,
+      primary: colors.primary,
+      background: colors.bg,
+      card: colors.card,
+      text: colors.text,
+      border: colors.border,
+    },
+  };
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <StatusBar style="dark" />
-        <RootStack />
+        <ThemeProvider value={theme}>
+          <StatusBar style="auto" />
+          <RootStack />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
